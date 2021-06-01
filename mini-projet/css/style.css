@@ -14,10 +14,32 @@
 }
 
 
-#avatar{
+.avatar_profil, #div_bouton_avatar {
 	height: 300px;
+	width: 300px;
 	display: inline;
 	margin-right: 30px;
+}
+
+#div_bouton_avatar{
+	display :none;
+	position: absolute;
+	top: 180px;
+	height: 300px;
+	width: 300px;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(97, 109, 123, 0.25);
+    font-size: 20px;
+    cursor:pointer;
+}
+
+.avatar_profil:hover + form > label#div_bouton_avatar, .avatar_profil + form > label#div_bouton_avatar:hover{
+	display: flex;
+}
+
+#bouton_avatar{
+	display: none;
 }
 
 #pseudonyme{
@@ -109,6 +131,15 @@
 }
 
 
+input[type="radio"].radio_note{
+	display:none;
+}
+
+.radio_note + label
+{
+	cursor:pointer;
+}
+
 .liste_media_basic{
 	display: flex;
 	flex-wrap: wrap;
@@ -116,8 +147,9 @@
 	margin: 0px;
 	width: 110%;
 }
+
 .media_image, .liste_media_basic img{
-	height: 304.8px;
+	height: 323.4px;
 	user-select: none;
 	width: 215.6px;
 }
@@ -137,7 +169,8 @@
 	align-items: center;
 }
 .liste_media_basic > div{
-	margin-right: 10px;
+	margin-right: 80px;
+	margin-bottom: 25px;
 }
 .liste_media_basic h5{
 	overflow-wrap: break-word;
@@ -154,7 +187,7 @@
 	border-bottom-right-radius: 3px;
 	height: 20px;
 	width: 24.25px;
-	bottom: 362px;
+	bottom: 380px;
 	left: 5px;
 	cursor: pointer;
 }
@@ -168,8 +201,8 @@
 	padding: 2px 6px 2px 6px;
 	border-bottom-right-radius: 3px;
 	height: 25px;
-	width: 160px;
-	bottom: 365px;
+	width: 175px;
+	bottom: 385px;
 	left: 2px;
 	cursor: pointer;
 	color: #EDF5FF;
@@ -186,6 +219,7 @@
 .media_basic{
 	background-color: #616D7B;
 	border: 5px solid #616D7B;
-	border-radius: 3px;
+	border-radius: 5px;
 	text-align: center;
+	box-shadow: 0px 0px 8px black;
 }

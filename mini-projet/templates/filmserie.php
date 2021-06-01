@@ -11,8 +11,9 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 }
 
 
-
+//Si l'id ou si le media n'est pas renseigné
 if(!valider("media") || !valider("id")){
+  //On renvoit vers la page de recherche
   header("Location:./index.php?view=rechercher");
   die("");
 }
@@ -30,7 +31,7 @@ if(!valider("media") || !valider("id")){
     $resultatInformations = json_decode(file_get_contents($url), true); //On ne récupère que le tableau de résultats
 
     $tabInformation = recupererInfo($resultatInformations, $media_type, "original");
-    //tprint($resultatInformations);
+    //tprint($tabInformation);
   }
 ?>
 
@@ -45,13 +46,23 @@ if(!valider("media") || !valider("id")){
       <div id="media_info_droite_haut">
         <h4 id="media_date">Date de sortie : <?php echo $tabInformation['date']['jour']."/".$tabInformation['date']['mois']."/".$tabInformation['date']['annee'];?></h4>
         <h4>Synopsis</h4>
-        <p id="media_synopsis"><?php echo $tabInformation['synopsis'];?></p>
+        <p id="media_synopsis"><?php echo $tabInformation['synopsis'];?></p><br/>
+        <?php
+          if($media_type == "tv"){
+            echo "<h5 id='media_date'>Nombre de saisons : ".$tabInformation['nbrSaison']."</h5>";
+          }
+        ?>
       </div>
       <div id="media_info_droite_bas">
         <?php
-        if (isset($_SESSION["connecte"])){
+        //L'utilisateur peut donner une note seulement si il est connecté, et que le média est déjà sorti
+        if (isset($_SESSION["connecte"]) && ($tabInformation["status"] == "Released" || $tabInformation["status"] == "Ended") && checkVisionne($id, $_SESSION["idUser"], $media_type)){
           mkForm("controleur.php");
-          mkInput("number","note","","champ_texte",["min"=>0,"max"=>5]);
+          //mkInput("number","note","","champ_texte",["min"=>0,"max"=>5]); // L'utilisateur ne peut qu'entrer un nombre entre 0 et 
+          mkRadioCb("radio","note",0,true,"","radio_note","radio_note0");
+          for ($i=1; $i < 6; $i++) { 
+            mkRadioCb("radio","note",$i,false,"<i class='far fa-star'></i>","radio_note","radio_note$i",["onchange"=>"mettreNotreA0()"],["onclick"=>"changerIconeNote(this,1)"]);
+          }
           mkInput("hidden","idMedia",$id); //On donne l'id du média
           mkInput("hidden","mediaType",$media_type); //On donne le type du média
           mkInput("submit","action","Noter","bouton_submit");
@@ -62,10 +73,11 @@ if(!valider("media") || !valider("id")){
     </div>
     <div id="media_info_droite">
       <p><?php 
-          if(listerNote($id, $media_type) != 0){
-            echo round(getNote($id, $media_type),2)."<i class='fas fa-star'></i>/5";
+          if(listerNote($id, $media_type) != 0){//Si il y a au moins un note attribuée à ce média on affiche la note
+            //round(...,2) arrondi le nombre à la centaine
+            echo round(getNote($id, $media_type),2)."<i class='fas fa-star'></i>/5"; 
           }
-          else{
+          else{//Sinon on indique que le média n'est pas noté
             echo "Non-noté";
           } 
         ?></p>
@@ -73,15 +85,38 @@ if(!valider("media") || !valider("id")){
   </div>
   <div id="boutons">
     <?php
+    //L'utilisateur peut ajouter un média à sa watchlist/ses favoris seulement si il est connecté
     if (isset($_SESSION["connecte"])){
       mkForm("controleur.php");
+
       mkInput("hidden","idMedia",$id); //On donne l'id du média
       mkInput("hidden","mediaType",$media_type); //On donne le type du média
-      mkInput("hidden","view","filmserie"); //On donne le type du média
-      if(!checkWatchlist($id, $_SESSION["idUser"], $media_type) && !checkVisionne($id, $_SESSION["idUser"], $media_type)){mkInput("submit","action","Ajouter à la Watchlist","bouton_submit");}
-      if(!checkVisionne($id, $_SESSION["idUser"], $media_type)){mkInput("submit","action","Marquer comme Visionné","bouton_submit");}
-      if(!checkFavoris($id, $_SESSION["idUser"], $media_type)){mkInput("submit","action","Ajouter aux Favoris","bouton_submit");}
-      else{mkInput("submit","action","Retirer des Favoris","bouton_submit");}
+      mkInput("hidden","view","filmserie"); //On donne la view sur laquelle on veut revenir
+
+      //Si le média n'est pas déjà dans la watchlist de l'utilisateur et si l'utilisateur n'a pas encore visionné ce média, il peut l'ajouter à sa watchlist
+      if(!checkWatchlist($id, $_SESSION["idUser"], $media_type) && !checkVisionne($id, $_SESSION["idUser"], $media_type)){
+        mkInput("submit","action","Ajouter à la Watchlist","bouton_submit");
+      }
+
+      //Si l'utilisateur n'a pas encore visionné ce média, et qu'il est sorti, il peut l'indiquer comme Visionné
+      if(!checkVisionne($id, $_SESSION["idUser"], $media_type) && ($tabInformation["status"] == "Released" || $tabInformation["status"] == "Ended")){
+        mkInput("submit","action","Marquer comme Visionné","bouton_submit");
+      }
+
+      //Si le média est dans les visionnés, l'utilisateur peut choisir de le retirer
+      if(checkVisionne($id, $_SESSION["idUser"], $media_type)){
+        mkInput("submit","action","Marquer comme non-vu","bouton_submit");
+      }
+
+      //Si le média n'est pas déjà dans les favoris de l'utilisateur, et que l'utilisateur l'a visionné, il peut l'ajouter à ses favoris
+      if(!checkFavoris($id, $_SESSION["idUser"], $media_type) && checkVisionne($id, $_SESSION["idUser"], $media_type)){
+        mkInput("submit","action","Ajouter aux Favoris","bouton_submit");
+      }
+
+      //Si le média est dans les favoris, l'utilisateur peut choisir de le retirer
+      if(checkFavoris($id, $_SESSION["idUser"], $media_type)){
+        mkInput("submit","action","Retirer des Favoris","bouton_submit");
+      }
       endForm();
     }
     ?>
@@ -106,4 +141,52 @@ if(!valider("media") || !valider("id")){
     echo afficherAvis($avis);
   }
 ?>
+
+
+<script type="text/javascript">
+  var misea0 = false;
+  function changerIconeNote(radio,debut=0){
+    if(debut){
+      console.log(radio.nextElementSibling.nextElementSibling);
+      if(radio.innerHTML == "<i class=\"fas fa-star\" aria-hidden=\"true\"></i>" && (radio.nextElementSibling.nextElementSibling.innerHTML != "<i class=\"fas fa-star\" aria-hidden=\"true\"></i>")){
+        allLabel = document.getElementsByTagName('LABEL');
+        for(label of allLabel){
+          label.innerHTML = "<i class='far fa-star'></i>";
+        }       
+        document.getElementById("radio_note0").checked = true;
+        misea0 = true; 
+        console.log("misea0"+misea0);
+        return;
+      }
+      else{
+        allLabel = document.getElementsByTagName('LABEL');
+        misea0 = false;
+        console.log("misea0"+misea0);
+        for(label of allLabel){
+          label.innerHTML = "<i class='far fa-star'></i>";
+        }
+      }
+
+    }
+    if(radio.tagName == undefined){return;}
+
+    if(radio.tagName == "LABEL"){
+      console.log(radio.tagName);
+      radio.innerHTML = "<i class='fas fa-star'></i>";
+      changerIconeNote(radio.previousElementSibling);
+    }
+    else{
+      console.log("RADIO");
+      changerIconeNote(radio.previousElementSibling);
+    }
+  }
+
+  function mettreNotreA0(){
+    console.log("MISEA0 DANS FONCTION "+misea0);
+    if(misea0){
+        document.getElementById("radio_note0").checked = true;
+        console.log("CHECK : " + document.getElementById("radio_note0").checked);  
+    }
+  }
+</script>
 

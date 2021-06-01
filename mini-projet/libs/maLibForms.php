@@ -123,8 +123,17 @@ function mkInput($type,$name,$value="",$class="",$param=[])
 	// Produit un champ formulaire
 	echo ("<input type=\"$type\" name=\"$name\" value=\"$value\" class=\"$class\"  $parametre/>\n");
 }
+function mkLabel($for,$label,$param=[])
+{
+	$parametre = "";
+	foreach ($param as $nom_param => $value_param) {
+		$parametre .= "$nom_param=\"$value_param\"";
+	}
+	// Produit le label d'un input
+	echo ("<label for=\"$for\" $parametre>$label</label>\n");
+}
 
-function mkRadioCb($type,$name,$value,$checked=false)
+function mkRadioCb($type,$name,$value,$checked=false,$label="",$class="",$id="",$param=[],$labelparam=[],$function="")
 {
 	// Produit un champ formulaire de type radio ou checkbox
 	// Et sélectionne cet élément si le quatrième argument est vrai
@@ -133,7 +142,24 @@ function mkRadioCb($type,$name,$value,$checked=false)
 	} else {
 	  $ch = "";
 	}
+
+	$parametre = "";
+	foreach ($param as $nom_param => $value_param) {
+		$parametre .= "$nom_param=\"$value_param\"";
+	}
+
+	$html_label = "";
+	if($label != "" && $id!=""){
+
+		$label_parametre = "";
+		foreach ($labelparam as $nom_param => $value_param) {
+			$label_parametre .= "$nom_param=\"$value_param\"";
+		}
+
+		$html_label = "<label $label_parametre for='$id'>$label</label>";
+	}
+
 	echo ("<input type=\"$type\" name=\"$name\"" .
-	      " value=\"$value\"/>\n");
+	      " value=\"$value\" id=\"$id\" class=\"$class\" $parametre $ch>\n".$html_label);
 }
 ?>

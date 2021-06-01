@@ -142,11 +142,20 @@
 			break;
 
 			case 'Marquer comme Visionné' :
+				if ($view = valider("view"))
 				if ($idMedia = valider("idMedia"))
 				if ($mediaType = valider("mediaType"))
 				ajouterVisionne($idMedia, $_SESSION["idUser"], $mediaType);
 				supprimerWatchlist($idMedia, $_SESSION["idUser"], $mediaType);
-				$addArgs .= "?view=filmserie&id=$idMedia&media=$mediaType";
+				$addArgs .= "?view=$view&id=$idMedia&media=$mediaType";
+			break;
+
+			case 'Marquer comme non-vu' :
+				if ($view = valider("view"))
+				if ($idMedia = valider("idMedia"))
+				if ($mediaType = valider("mediaType"))
+				supprimerVisionne($idMedia, $_SESSION["idUser"], $mediaType);
+				$addArgs .= "?view=$view&id=$idMedia&media=$mediaType";
 			break;
 
 			case 'Ajouter aux Favoris' :

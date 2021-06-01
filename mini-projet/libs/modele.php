@@ -130,6 +130,11 @@ function listerVisionne($idUser, $media_type){
 	return parcoursRs(SQLSelect($SQL));
 }
 
+function supprimerVisionne($idMedia, $idUser, $media_type){
+	$SQL = "DELETE FROM visionne WHERE id_film='$idMedia' AND id_user='$idUser' AND type_media='$media_type';";
+	SQLInsert($SQL);
+}
+
 /********* FAVORIS *********/
 
 function ajouterFavoris($idMedia, $idUser, $media_type){
