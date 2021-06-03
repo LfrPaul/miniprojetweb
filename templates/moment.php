@@ -56,7 +56,7 @@
   $tabAvisMoment = listerAvisMoment($idMoment);
   //tprint($tabAvis);
   foreach ($tabAvisMoment as $avisMoment) {
-    echo afficherAvis($avisMoment);
+    afficherAvis($avisMoment, "moment", $tabInformation, $idMoment);
   }
 
   echo
@@ -95,12 +95,6 @@
     mkInput("hidden","mediaType",$tabInformation["typeMedia"]); //On donne le type de média
     mkInput("submit","action","Ajouter un moment","bouton_submit");
     endForm();
-  }
-  //Lister les avis déjà existants
-  $tabAvisMoment = listerAvisMoment($idMoment);
-  //tprint($tabAvis);
-  foreach ($tabAvisMoment as $avisMoment) {
-    echo afficherAvis($avisMoment);
   }
 
   echo

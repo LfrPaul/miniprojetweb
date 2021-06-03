@@ -46,7 +46,7 @@ function mkFilmserie($resultat){
 
 	if(listerNote($id, $media_type) != 0){//Si il y a au moins un note attribuée à ce média on affiche la note
             //round(...,2) arrondi le nombre à la centaine
-        $note = round(getNote($id, $media_type),2)."<i class='fas fa-star'></i>/5";
+        $note = round(getNote($id, $media_type),2)."<i class='fas fa-star'></i>";
         }
     else{//Sinon on indique que le média n'est pas noté
         $note = "Non-noté";
@@ -107,14 +107,92 @@ function recupererInfo($tabinfo, $media_type, $tailleimage){
 }
 
 
-function afficherAvis($avis){
+function afficherAvis($avis, $page, $tabInformation, $idMoment=0){
 	$avatar = "ressources/avatars/".$avis['id_user'].".jpg";//Chemin vers l'avatar de l'utilisateur ayant posté l'avis
 
 	$pseudo = getPseudo($avis["id_user"]); //getPseudo récupère le pseudo en fonction de l'id de l'utilisateur
 
+	if($page == "filmserie"){
+		$class = "avis_global";
+		$table = "avisglobal";
+	}
+	if($page == "moment"){
+		$class = "avis_moment";
+		$table = "avismoment";
+	}
+
 	//On retourne le innerHTML de l'avis
-	$innerHTML = "<div class='avis_global'><img src='$avatar' class='img-circle avis_global_avatar'><div id='avis_global_droite'><h4>$pseudo</h4><p>".$avis["avis"]."</p></div></div>";
-	return $innerHTML;
+	echo "<a href='index.php?view=profil&idUser=" . $avis["id_user"] . "' class=$class><div class='".$class."_gauche'><img src='$avatar' class='img-circle avis_global_avatar'><div id='avis_global_droite'><h4>$pseudo</h4><p>".$avis["avis"]."</p></div></div><div class='".$class."_droite'>";
+
+	if(isset($_SESSION["connecte"])){
+		if($avis['id_user'] != $_SESSION['idUser'] && !isSignalerAvis($avis["id_avis"], $table, $_SESSION['idUser']) && !$_SESSION["admin"]){
+			mkForm("controleur.php","get","",["class" => "form_avis"]);
+		    mkInput("hidden","idAvis",$avis["id_avis"]); //On donne l'id de l'avis
+		    mkInput("hidden","page",$page); //On donne la table des avis
+		    mkInput("hidden","idMedia",$tabInformation["id"]); //On donne l'id du média
+		    mkInput("hidden","mediaType",$tabInformation["typeMedia"]); //On donne le type de média
+		    if($idMoment!=0){
+		   		mkInput("hidden","idMoment",$idMoment); //On donne le type de média
+		   	}
+		    mkInput("submit","action","Signaler cet avis","bouton_report");
+		    endForm();
+		}
+		if($_SESSION["admin"]){
+			mkForm("controleur.php","get","",["class" => "form_avis"]);
+		    mkInput("hidden","idAvis",$avis["id_avis"]); //On donne l'id de l'avis
+		    mkInput("hidden","tableavis",$table); //On donne la table des avis
+		    mkInput("hidden","iduser",$avis['id_user']); //On donne l'id du média
+		    mkInput("hidden","view","filmserie"); //On donne la table des avis
+		    mkInput("hidden","idMedia",$tabInformation["id"]); //On donne l'id du média
+		    mkInput("hidden","mediaType",$tabInformation["typeMedia"]); //On donne le type de média
+		    if($idMoment!=0){
+		   		mkInput("hidden","idMoment",$idMoment); //On donne le type de média
+		   	}
+		    mkInput("submit","action","Supprimer cet avis","bouton_report");
+		    endForm();
+		}
+		if($avis['id_user'] == $_SESSION['idUser'] && !$_SESSION["admin"]){
+			mkForm("controleur.php","get","",["class" => "form_avis"]);
+		    mkInput("hidden","idAvis",$avis["id_avis"]); //On donne l'id de l'avis
+		    mkInput("hidden","tableavis",$table); //On donne la table des avis
+		    mkInput("hidden","iduser",$avis['id_user']); //On donne l'id du média
+		    mkInput("hidden","view","filmserie"); //On donne la table des avis
+		    mkInput("hidden","idMedia",$tabInformation["id"]); //On donne l'id du média
+		    mkInput("hidden","mediaType",$tabInformation["typeMedia"]); //On donne le type de média
+		    if($idMoment!=0){
+		   		mkInput("hidden","idMoment",$idMoment); //On donne le type de média
+		   	}
+		    mkInput("submit","action","Supprimer cet avis","bouton_report");
+		    endForm();
+		}
+	}
+
+	echo "</div></a>";
+	
+}
+
+function afficherAvisSignalement($avis, $tableavis, $iduser){
+	$avatar = "ressources/avatars/".$avis['id_user'].".jpg";//Chemin vers l'avatar de l'utilisateur ayant posté l'avis
+
+	$pseudo = getPseudo($avis["id_user"]); //getPseudo récupère le pseudo en fonction de l'id de l'utilisateur
+
+
+
+	//On retourne le innerHTML de l'avis
+	echo "<a href='index.php?view=profil&idUser=" . $avis["id_user"] . "' class=avis_moment><div class='avis_moment_gauche'><img src='$avatar' class='img-circle avis_global_avatar'><div id='avis_global_droite'><h4>$pseudo</h4><p>".$avis["avis"]."</p></div></div><div class='avis_moment_droite'>";
+
+			mkForm("controleur.php","get","",["class" => "form_avis"]);
+		    mkInput("hidden","idAvis",$avis["id_avis"]); //On donne l'id de l'avis
+		    mkInput("hidden","tableavis",$tableavis); //On donne la table des avis
+		    mkInput("hidden","iduser",$iduser); //On donne la table des avis
+		    mkInput("hidden","view","admin"); //On donne la table des avis
+		    mkInput("submit","action","Laisser cet avis","bouton_report");
+		    mkInput("submit","action","Supprimer cet avis","bouton_report");
+		    endForm();
+
+
+	echo "</div></a></br>";
+	
 }
 
 function afficherFilmSerie($media, $media_type, $page=""){

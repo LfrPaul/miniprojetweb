@@ -27,7 +27,7 @@ function verifUser($login,$password)
     $_SESSION["idUser"] = $idUser;
     $_SESSION["pseudo"] = $login;
     $_SESSION["connecte"] = true;
-    //$_SESSION["admin"] = isAdmin($idUser);
+    $_SESSION["admin"] = isAdmin($idUser);
     //connecterUtilisateur($idUser);
     return true;
   } else {
@@ -58,20 +58,6 @@ function securiser($urlBad,$urlGood=false)
 	  }
 	}
 }
-
-// Déconnecte un utilisateur
-
-function seDeconnecter()
-{
-  $idUser = $_SESSION["idUser"];
-  deconnecterUtilisateur($idUser);
-  session_destroy();
-  rediriger("login.php", array("msg" => "Déconnexion effectuée avec succès"));
-}
-
-
-
-
 
 
 ?>

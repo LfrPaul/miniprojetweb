@@ -37,6 +37,14 @@
 	color: #48525E;
 }
 
+.bouton_report{
+	background-color: #D4DDE8;
+	border: 2px solid #D4DDE8;
+	padding: 3px 8px 3px 8px;
+	color: #48525E;
+	border-radius: 3px;
+}
+
 .avatar_profil, #div_bouton_avatar {
 	height: 300px;
 	width: 300px;
@@ -152,6 +160,8 @@
 	height: 400px;
 	display: inline;
 	margin-right: 30px;
+	border: 5px solid #616D7B;
+	box-shadow: 0px 0px 10px #000000;
 }
 
 #media_info_centre{
@@ -163,12 +173,32 @@
 	margin-right: 10px;
 }
 
-.avis_global{
+.avis_global, .avis_moment{
 	display: flex;
 	flex-direction: row;
-	align-items: center;	
+    align-items: flex-start;	
+    justify-content: space-between;
 	margin-bottom: 15px;
+	text-decoration: none;
+	color: #EDF5FF;
+	cursor: pointer;
+	overflow-wrap: break-word;
 }
+
+.avis_global_gauche, .avis_moment_gauche{
+	display: flex;
+}
+
+.avis_global{
+	width: 70%;
+}
+
+.avis_global:hover, .avis_moment:hover{
+	text-decoration: none;
+	color: #EDF5FF;
+}
+
+
 
 
 input[type="radio"].radio_note{

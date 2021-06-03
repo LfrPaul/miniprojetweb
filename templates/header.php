@@ -57,7 +57,7 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
       </div>
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-        
+
 	         <!-- <li class="active"><a href="index.php?view=accueil">Accueil</a></li> -->
 			<?=mkHeadLink("Accueil","accueil",$view)?>
 			<?=mkHeadLink("Recherche","rechercher",$view)?>
@@ -71,7 +71,11 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
 			{
 				echo mkHeadLink("Ma Watchlist","watchlist",$view);
 				echo mkHeadLink("Mes Favoris","favoris",$view);
-				echo mkHeadLink("Mon Profil","profil",$view);
+				echo mkHeadLink("Mon Profil","profil&idUser=".$_SESSION["idUser"],$view);
+			}
+			if (valider("admin","SESSION")){
+				echo mkHeadLink("Administration","admin",$view); 
+				//echo "<li><a href=\"index.php?view=login\">Se connecter</a></li>";
 			}
 			?>
         </ul>

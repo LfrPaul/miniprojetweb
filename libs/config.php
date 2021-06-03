@@ -19,6 +19,6 @@ $BDD_base="base";
 $BDD_host="localhost";
 $BDD_user="paul";
 $BDD_password="v011ey59"; // vide sous windows
-$BDD_base="miniprojet";
+$BDD_base="holliiwood";
 
 ?>

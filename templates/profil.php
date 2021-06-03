@@ -9,6 +9,13 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php" || !$_SESSION["connecte"])
 	die("");
 }
 
+if($idUserProfil = valider("idUser"))
+if($_SESSION["idUser"] == $idUserProfil){
+  $profil_connecte = 1;
+}
+else{
+  $profil_connecte = 0;
+}
 ?>
 
 <div class="page-header">
@@ -18,26 +25,17 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php" || !$_SESSION["connecte"])
 <div id="profil">
   <div>
     <img class="img-circle avatar_profil" src="ressources/avatars/<?php echo $_SESSION["idUser"]?>.jpg">
-    <?php
-      mkForm("controleur.php","POST","multipart/form-data");
-    ?>
-      <?php 
-        mkLabel("bouton_avatar","Importer une Image",["class"=>"img-circle", "id"=>"div_bouton_avatar"]);
-        mkInput("file","newavatar","","",["id"=>"bouton_avatar"]);
-      ?>
-    <?php
-      mkInput("submit","action","Changer d avatar","bouton_submit");
-      endForm();
-    ?>
   </div>
   <?php  
   ?>
-  <h2 id="pseudonyme"><?php echo $_SESSION["pseudo"];?></h2>
+  <h2 id="pseudonyme"><?php echo getPseudo($idUserProfil);?></h2>
   <?php
-  mkForm("controleur.php");
-  mkInput("text","newpseudo","","champ_texte");
-  mkInput("submit","action","Changer de pseudo","bouton_submit");
-  endForm();
+  if($profil_connecte){//Si le profil appartient à celui de l'utilisateur connecte alors on permet le changement de pseudo
+    mkForm("controleur.php");
+    mkInput("text","newpseudo","","champ_texte");
+    mkInput("submit","action","Changer de pseudo","bouton_submit");
+    endForm();
+  }
   ?>
 
 </div>
@@ -52,10 +50,17 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php" || !$_SESSION["connecte"])
     $visionne_list = listerVisionne($_SESSION["idUser"], "movie");
     foreach ($visionne_list as $nombre => $visionne) {
       $id_media = $visionne["id_film"];
+      //Url de requête vers l'API
       $url = "https://api.themoviedb.org/3/movie/$id_media?api_key=83354d9b54af3ca7b64d6dc86ddac815&language=fr-FR";
-      $visionne_list[$nombre]["url"] = $url;
+     
       $visionne["url"] = $url;
-      afficherFilmSerie($visionne, "movie", "profil");
+      if($profil_connecte){//Si le profil appartient à celui de l'utilisateur connecte
+        //Le 3ème paramètre permet de rajouter les chevrons permettant de marquer comme non-visionné, ici on ne veut l'afficher que si le profil appartient à celui de l'utilisateur connecte
+        afficherFilmSerie($visionne, "movie", "profil");
+      }
+      else{
+        afficherFilmSerie($visionne, "movie");
+      }
     }
   ?>
 </div>
@@ -69,10 +74,17 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php" || !$_SESSION["connecte"])
     $visionne_list = listerVisionne($_SESSION["idUser"], "tv");
     foreach ($visionne_list as $nombre => $visionne) {
       $id_media = $visionne["id_film"];
+      //Url de requête vers l'API
       $url = "https://api.themoviedb.org/3/tv/$id_media?api_key=83354d9b54af3ca7b64d6dc86ddac815&language=fr-FR";
       $visionne_list[$nombre]["url"] = $url;
       $visionne["url"] = $url;
-      afficherFilmSerie($visionne, "tv", "profil");
+      if($profil_connecte){//Si le profil appartient à celui de l'utilisateur connecte
+        //Le 3ème paramètre permet de rajouter les chevrons permettant de marquer comme non-visionné, ici on ne veut l'afficher que si le profil appartient à celui de l'utilisateur connecte
+        afficherFilmSerie($visionne, "tv", "profil");
+      }
+      else{
+        afficherFilmSerie($visionne, "tv");
+      }
     }
   ?>
 </div>

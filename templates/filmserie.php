@@ -160,7 +160,7 @@ if(!valider("media") || !valider("id")){
   $tabAvis = listerAvis($id, $media_type);
   //tprint($tabAvis);
   foreach ($tabAvis as $avis) {
-    echo afficherAvis($avis);
+    afficherAvis($avis, "filmserie", $tabInformation);
   }
 ?>
 

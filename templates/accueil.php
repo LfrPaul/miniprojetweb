@@ -21,7 +21,7 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
       <h1>Holliiwood</h1>
     </div>
 
-    <p class="lead">Bienvenue sur Holliiwood<?php if($_SESSION["connecte"]){echo ", " . $_SESSION["pseudo"];}?></p>
+    <p class="lead">Bienvenue sur Holliiwood<?php if(isset($_SESSION["connecte"])){echo ", " . $_SESSION["pseudo"];}?></p>
 
     <p>Toutes les fonctionnalités dont tu as besoin se situent dans la barre de navigation en haut de la page</p>
     <p>Ici, tous les films et toutes les séries sont répertoriés. Tu peux indiquer si tu as visionné un d'entre eux.</p>
@@ -30,5 +30,4 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
     <p>Si tu as bien aimé un film ou une série, tu lui attribuer une note (de 0 à 5 étoiles), ou lui donner un avis global.</p>
     <p>Tu peux aussi indiquer un moment qui apparaitra sur la timeline en bas des informations, et ainsi permettre aux autres utilisateurs de donner leurs avis dessus.</p>
     <br>
-
     <p class="lead"></p>

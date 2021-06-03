@@ -106,30 +106,9 @@
 				if ($newpseudo = valider("newpseudo"))
 				changerPseudo($_SESSION["idUser"], $newpseudo);
 				$_SESSION["pseudo"] = $newpseudo;
-				$addArgs .= "?view=profil";
+				$addArgs .= "?view=profil&idUser=".$_SESSION["idUser"];
 			break;
 
-			case 'Changer d avatar' :
-				$dir = "ressources\avatars\\";
-				list($width, $height) = getimagesize($_FILES["newavatar"]['tmp_name']);
-				$new_width = min($width,$height);
-				$new_height = min($width,$height);
-				$dstx = ($width-$new_width)/2;
-				$dsty = ($height-$new_height)/2;
-				$thumb = imagecreatetruecolor($new_width, $new_height);
-				$source = imagecreatefromjpeg($_FILES["newavatar"]['tmp_name']);
-
-
-
-				imagecopyresampled($thumb, $source, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-
-				imagejpeg($thumb, $dir.$_SESSION["idUser"].".jpg");
-				imagedestroy($thumb);
-				imagedestroy($source);
-
-
-				$addArgs .= "?view=profil";
-			break;
 
 			case 'Ajouter un moment' :
 				if ($idMedia = valider("idMedia"))
@@ -162,6 +141,52 @@
 				if ($idMoment = valider("idMoment"))
 				creerAvisMoment($idMoment, $_SESSION["idUser"], $avis);
 				$addArgs .= "?view=filmserie&id=$idMedia&media=$mediaType&idMoment=$idMoment";
+			break;
+
+			case 'Signaler cet avis' :
+				if ($idAvis = valider("idAvis"))
+				if ($page = valider("page"))
+				if ($idMedia = valider("idMedia"))
+				if ($mediaType = valider("mediaType"))
+				if($page == "filmserie"){
+					$table = "avisglobal";
+					$paramMoment = "";
+				}
+				if($page == "moment"){
+					$table = "avismoment";
+					$idMoment = valider("idMoment");
+					$paramMoment = "&idMoment=".$idMoment;
+				}
+				signalerAvis($idAvis, $table, $_SESSION["idUser"]);
+				$addArgs .= "?view=filmserie&id=$idMedia&media=$mediaType".$paramMoment;
+			break;
+
+			case 'Supprimer cet avis' :
+				if ($idAvis = valider("idAvis"))
+				if ($tableavis = valider("tableavis"))
+				if ($iduser = valider("iduser"))
+				if ($view = valider("view"))
+				if($view == "filmserie"){
+					$idMedia = valider("idMedia");
+					$mediaType = valider("mediaType");
+					$argMoment = "";
+					if(isset($_REQUEST["idMoment"])){
+						$argMoment = "&idMoment=".valider("idMoment");
+					}
+					$addArgs = "?view=filmserie&id=$idMedia&media=$mediaType".$argMoment;
+				}
+				if($view == "admin"){
+					$addArgs .= "?view=admin";
+				}
+				supprimerAvis($idAvis, $tableavis);
+			break;
+
+			case 'Laisser cet avis' :
+				if ($idAvis = valider("idAvis"))
+				if ($tableavis = valider("tableavis"))
+				if ($iduser = valider("iduser"))
+				$addArgs .= "?view=admin";
+				laisserAvis($idAvis, $tableavis);
 			break;
 
 			case 'Noter' :
