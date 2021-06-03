@@ -32,11 +32,15 @@ function mkFilmserie($resultat){
 	//Si le media_type est movie (film) ou tv (serie) le champ de titre, et de l'annee change
 	if($media_type == "movie"){ // si le type de média est film
 		$titre = $resultat["title"]; // on récupère le champ "title"
-		$annee = substr($resultat["release_date"],0,4); // on récupère le champ "release_date"
+		$annee = "";
+		if(isset($resultat["release_date"])){
+		$annee = substr($resultat["release_date"],0,4);} // on récupère le champ "release_date"
 	}
 	if($media_type == "tv"){ // si le type de média est série
 		$titre = $resultat["name"]; // on récupère le champ "name"
-		$annee = substr($resultat["first_air_date"],0, 4); // on récupère le champ "first_air_date"
+		$annee = "";
+		if(isset($resultat["first_air_date"])){
+		$annee = substr($resultat["first_air_date"],0, 4);} // on récupère le champ "first_air_date"
 	}
 
 
@@ -48,9 +52,17 @@ function mkFilmserie($resultat){
         $note = "Non-noté";
     } 
 
+    $visionne = "";
+    if(isset($_SESSION["connecte"])){
+    	if(checkVisionne($id, $_SESSION["idUser"], $media_type)){
+    		$visionne = "<div class='visionne_recherche'>Visionné</div>";
+    	}
+
+    }
+
 	//Ici on ne veut récupèrer que les films et les séries
 	if($media_type == "tv" || $media_type == "movie"){
-		echo "<a href='index.php?view=filmserie&id=$id&media=$media_type' class='resultat_recherche'><img style='height:300px' src='https://image.tmdb.org/t/p/original/$lien_affiche'><div class='info_recherche'><h2>$titre ($annee)</h2><p>$synopsis</p></div><div class='note_recherche'>$note</div></a>";
+		echo "<a href='index.php?view=filmserie&id=$id&media=$media_type' class='resultat_recherche'><div class='resultat_recherche_gauche'><img style='height:300px' src='https://image.tmdb.org/t/p/original/$lien_affiche'><div class='info_recherche'><h2>$titre ($annee)</h2><p>$synopsis</p></div></div><div class='resultat_recherche_droite'><div class='note_recherche'>$note</div>$visionne</div></a>";
 		
 	}
 	}

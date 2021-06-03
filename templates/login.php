@@ -15,8 +15,8 @@ if ($checked = valider("remember", "COOKIE")) $checked = "checked";
 
 
 ?>
-<div id="login_container">
-  <div id="login_gauche">
+<div id="LoginGlobal">
+  <div id="Connexion">
     <div class="page-header">
       <h1>Se connecter</h1>
     </div>
@@ -40,7 +40,7 @@ if ($checked = valider("remember", "COOKIE")) $checked = "checked";
       <div class="checkbox">
         <label><input type="checkbox" name="remember" <?php echo $checked;?> >Se souvenir de moi</label>
       </div>
-      <button type="submit" name="action" value="Connexion" class="btn btn-default">Connexion</button>
+      <button type="submit" name="action" value="Connexion" class="bouton_submit">Connexion</button>
     </form>
 
     </p>
@@ -48,7 +48,7 @@ if ($checked = valider("remember", "COOKIE")) $checked = "checked";
 
 
 
-  <div id="login_droite">
+  <div id="Inscription">
     <div class="page-header">
       <h1>Créer son compte</h1>
     </div>
@@ -72,12 +72,10 @@ if ($checked = valider("remember", "COOKIE")) $checked = "checked";
       <div class="checkbox">
         <label><input type="checkbox" name="remember" <?php echo $checked;?> >Se souvenir de moi</label>
       </div>
-      <button type="submit" name="action" value="Créer un Compte" class="btn btn-default">Créer un Compte</button>
+      <button type="submit" name="action" value="Créer un Compte" class="bouton_submit">Créer un Compte</button>
     </form>
 
     </p>
   </div>
 </div>
-
-
 
