@@ -57,23 +57,23 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
       </div>
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-         	<!-- <li class="active"><a href="index.php?view=accueil">Accueil</a></li> -->
-		<?=mkHeadLink("Accueil","accueil",$view)?>
-		<?=mkHeadLink("Recherche","rechercher",$view)?>
-		<?php
-		// Si l'utilisateur n'est pas connecte, on affiche un lien de connexion 
-		if (!valider("connecte","SESSION")){
-			echo mkHeadLink("Se connecter","login",$view); 
-			//echo "<li><a href=\"index.php?view=login\">Se connecter</a></li>";
-		}
-		else
-		{
-			echo mkHeadLink("Ma Watchlist","watchlist",$view);
-			echo mkHeadLink("Mes Favoris","favoris",$view);
-			echo mkHeadLink("Mon Profil","profil",$view);
-
-		}
-		?>
+        
+	         <!-- <li class="active"><a href="index.php?view=accueil">Accueil</a></li> -->
+			<?=mkHeadLink("Accueil","accueil",$view)?>
+			<?=mkHeadLink("Recherche","rechercher",$view)?>
+			<?php
+			// Si l'utilisateur n'est pas connecte, on affiche un lien de connexion 
+			if (!valider("connecte","SESSION")){
+				echo mkHeadLink("Se connecter","login",$view); 
+				//echo "<li><a href=\"index.php?view=login\">Se connecter</a></li>";
+			}
+			else
+			{
+				echo mkHeadLink("Ma Watchlist","watchlist",$view);
+				echo mkHeadLink("Mes Favoris","favoris",$view);
+				echo mkHeadLink("Mon Profil","profil",$view);
+			}
+			?>
         </ul>
       </div><!--/.nav-collapse -->
     </div>

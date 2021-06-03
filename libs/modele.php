@@ -180,6 +180,11 @@ function checkWatchlist($idMedia, $idUser, $media_type){
 }
 
 /********* MOMENTS **********/
+function creerMoment($idMedia, $media_type, $offset, $label, $resume){
+	$SQL = "INSERT into moments(id_film, type_media, offset, label, resume) VALUES('$idMedia', '$media_type', '$offset', '$label', '$resume');";
+	SQLInsert($SQL);
+}
+
 function recupererMoments($idMedia, $media_type){
 	$SQL = "SELECT * FROM moments WHERE id_film = '$idMedia' AND type_media='$media_type'";
 	return parcoursRs(SQLSelect($SQL));

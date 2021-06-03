@@ -51,9 +51,13 @@
 
 					}	
 					else{
-						header("Location:./index.php?view=login&alerte=Les informations fournies ne sont pas valides !");
+						header("Location:./index.php?view=login&alertelogin=Les informations fournies ne sont pas valides !");
 						die("");
 					}
+				}
+				else{
+					header("Location:./index.php?view=login&alertelogin=Les informations fournies ne sont pas valides !");
+					die("");
 				}
 
 				// On redirigera vers la page index automatiquement
@@ -82,16 +86,20 @@
 
 					}	
 					else{
-						header("Location:./index.php?view=login&alerte=Les informations fournies ne sont pas valides !");
+						header("Location:./index.php?view=login&alerteregister=Veuillez remplir tous les champs !");
 						die("");
 					}
+				}	
+				else{
+					header("Location:./index.php?view=login&alerteregister=Veuillez remplir tous les champs !");
+					die("");
 				}
-
 				// On redirigera vers la page index automatiquement
 			break;
 
 			case 'Logout' :
 				session_destroy();
+				$addArgs .= "?view=login";
 			break;
 
 			case 'Changer de pseudo' :
@@ -121,6 +129,22 @@
 
 
 				$addArgs .= "?view=profil";
+			break;
+
+			case 'Ajouter un moment' :
+				if ($idMedia = valider("idMedia"))
+				if ($mediaType = valider("mediaType"))
+				if ($label = valider("label"))
+				if ($resume = valider("resume"))
+				if (isset($_REQUEST["timecode_minute"]))
+				if (isset($_REQUEST["timecode_heure"])){
+					$timecode_heure = valider("timecode_heure");
+					$timecode_minute = valider("timecode_minute");
+					$offset = $timecode_heure*60 + $timecode_minute;
+					echo $offset;
+					creerMoment($idMedia, $mediaType, $offset, $label, $resume);
+					$addArgs .= "?view=filmserie&id=$idMedia&media=$mediaType";
+				}
 			break;
 
 			case 'Poster un avis' :

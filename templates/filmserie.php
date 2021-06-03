@@ -51,6 +51,24 @@ if(!valider("media") || !valider("id")){
           if($media_type == "tv"){
             echo "<h5 id='media_date'>Nombre de saisons : ".$tabInformation['nbrSaison']."</h5>";
           }
+          if($media_type == "movie"){
+
+            $offsetHour = floor($tabInformation["duree"]/60);
+            $offsetMinutes = $tabInformation["duree"]-$offsetHour*60;
+            if($offsetHour != 0){
+              $offsetHour .= "h";
+            }
+            else{
+              $offsetHour = "";
+            }
+            if($offsetMinutes != 0){
+              $offsetMinutes .= "min";
+            }
+            else{
+              $offsetMinutes = "";
+            }
+            echo "<h5 id='media_duree'>Durée : " . $offsetHour . $offsetMinutes . "</h5>";
+          }
         ?>
       </div>
       <div id="media_info_droite_bas">
@@ -123,7 +141,10 @@ if(!valider("media") || !valider("id")){
   </div>
 </div>
 <?php
-  include("templates/moment.php");
+  if(($tabInformation["status"] == "Released" || $tabInformation["status"] == "Ended") && $tabInformation["typeMedia"] == "movie"){
+    include("templates/moment.php");
+  }
+
   if (isset($_SESSION["connecte"])){
   //Création du formulaire de recherche
   mkForm("controleur.php","get","",["class" => "form_avis"]);

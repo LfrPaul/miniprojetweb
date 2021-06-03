@@ -19,46 +19,95 @@
     mkInput("hidden","idMoment","","",["id"=>"hidden_idMoment"]); //On donne le type du média
     mkInput("submit","offset","","bouton_submit",["id"=>"popup_moment","onmousemove"=>"afficherPopup(event, true)","onmouseout"=>"cacherPopup()","onclick"=>"afficherMoment(event)"]);
     endForm();
+
+    if(isset($_SESSION["connecte"])){
+      echo "<a type=\"button\" href=\"index.php?view=filmserie&id=".$tabInformation["id"]."&media=".$tabInformation["typeMedia"]."&action=Ajoutermoment\" class=\"bouton_submit\">Ajouter un moment</a>";
+    }
   ?>
-  <button type="button" class="bouton_submit">Ajouter un moment</button>
+
+  
 </div>
 
 <?php
-if($idMoment = valider("idMoment")){
-$moment = getInfoMoment($idMoment);
-$moment["timecode"]["heure"] = round($moment["offset"]/60, 0);
-$moment["timecode"]["minute"] = round($moment["offset"] - $moment["timecode"]["heure"]*60, 0);
-echo
-"<div id=\"moment\">
-  <div id=\"moment_fond_vide\" onclick=\"retournerPageFilmSerie()\"></div>
-  <div id=\"moment_fond\">
-    <div id=\"moment_informations\">
-      <h2>" . $tabInformation['titre'] . " - " . $moment["label"] . "</h2>
-      <p>Timecode : " . $moment["timecode"]["heure"] . "h" . $moment["timecode"]["minute"] . "min</p>
-      <p>Résumé : " . $moment["resume"] . "</p>
-      <h3>Avis</h3>";
-if (isset($_SESSION["connecte"])){
-  //Création du formulaire de recherche
-  mkForm("controleur.php","get","",["class" => "form_avis"]);
-  mkInput("text","avis","","champ_texte");
-  mkInput("hidden","idMedia",$tabInformation["id"]); //On donne l'id du média
-  mkInput("hidden","mediaType",$tabInformation["typeMedia"]); //On donne le type de média
-  mkInput("hidden","idMoment",$idMoment); //On donne l'id du moment
-  mkInput("submit","action","Poster un avis sur ce moment","bouton_submit");
-  endForm();
-}
-//Lister les avis déjà existants
-$tabAvisMoment = listerAvisMoment($idMoment);
-//tprint($tabAvis);
-foreach ($tabAvisMoment as $avisMoment) {
-  echo afficherAvis($avisMoment);
-}
+  if($idMoment = valider("idMoment")){
+  $moment = getInfoMoment($idMoment);
+  $moment["timecode"]["heure"] = round($moment["offset"]/60, 0);
+  $moment["timecode"]["minute"] = round($moment["offset"] - $moment["timecode"]["heure"]*60, 0);
+  echo
+  "<div id=\"moment\">
+    <div id=\"moment_fond_vide\" onclick=\"retournerPageFilmSerie('Avis')\"></div>
+    <div id=\"moment_fond\">
+      <div id=\"moment_informations\">
+        <h2>" . $tabInformation['titre'] . " - " . $moment["label"] . "</h2>
+        <p>Timecode : " . $moment["timecode"]["heure"] . "h" . $moment["timecode"]["minute"] . "min</p>
+        <p>Résumé : " . $moment["resume"] . "</p>
+        <h3>Avis</h3>";
+  if (isset($_SESSION["connecte"])){
+    //Création du formulaire de recherche
+    mkForm("controleur.php","get","",["class" => "form_avis"]);
+    mkInput("text","avis","","champ_texte");
+    mkInput("hidden","idMedia",$tabInformation["id"]); //On donne l'id du média
+    mkInput("hidden","mediaType",$tabInformation["typeMedia"]); //On donne le type de média
+    mkInput("hidden","idMoment",$idMoment); //On donne l'id du moment
+    mkInput("submit","action","Poster un avis sur ce moment","bouton_submit");
+    endForm();
+  }
+  //Lister les avis déjà existants
+  $tabAvisMoment = listerAvisMoment($idMoment);
+  //tprint($tabAvis);
+  foreach ($tabAvisMoment as $avisMoment) {
+    echo afficherAvis($avisMoment);
+  }
 
-echo
-    "</div>
-  </div>
-</div>";
-}
+  echo
+      "</div>
+    </div>
+  </div>";
+  }
+
+  if(valider("action")){
+  echo
+  "<div id=\"moment\">
+    <div id=\"moment_fond_vide\" onclick=\"retournerPageFilmSerie('Moment')\"></div>
+    <div id=\"moment_fond\">
+      <div id=\"moment_informations\">
+        <h2>" . $tabInformation['titre'] . "</h2><h2>Ajouter un moment</h2>
+        <h3>Moment</h3>";
+  if (isset($_SESSION["connecte"])){
+    //Création du formulaire de recherche
+    mkForm("controleur.php","get","",["class" => "form_avis"]);
+    mkLabel("champ_texte_label","Label");
+    echo "<br>";
+    mkInput("text","label","","champ_texte",["id"=>"champ_texte_label"]);
+    echo "<br>";
+    mkLabel("champ_texte_resume","Résumé");
+    echo "<br>";
+    mkInput("text","resume","","champ_texte",["id"=>"champ_texte_resume"]);
+    echo "<br>";
+    mkLabel("champ_texte_temps_heure","Timecode");
+    echo "<br>";
+    mkInput("text","timecode_heure","","champ_texte",["id"=>"champ_texte_temps_heure"]);
+    echo "h";
+    mkInput("text","timecode_minute","","champ_texte",["id"=>"champ_texte_temps_minute"]);
+    echo "min<br>";
+    echo "<br>";
+    mkInput("hidden","idMedia",$tabInformation["id"]); //On donne l'id du média
+    mkInput("hidden","mediaType",$tabInformation["typeMedia"]); //On donne le type de média
+    mkInput("submit","action","Ajouter un moment","bouton_submit");
+    endForm();
+  }
+  //Lister les avis déjà existants
+  $tabAvisMoment = listerAvisMoment($idMoment);
+  //tprint($tabAvis);
+  foreach ($tabAvisMoment as $avisMoment) {
+    echo afficherAvis($avisMoment);
+  }
+
+  echo
+      "</div>
+    </div>
+  </div>";
+  }
 ?>
 
 <script type="text/javascript">
@@ -146,8 +195,14 @@ echo
     console.log(tabMoments);
   }
 
-  function retournerPageFilmSerie(){
-    var argument = location.href.split('&idMoment')[0];
-    document.location.href = argument;
+  function retournerPageFilmSerie(page){
+    if(page == "Moment"){
+      var argument = location.href.split('&action')[0];
+      document.location.href = argument;
+    }
+    if(page == "Avis"){
+      var argument = location.href.split('&idMoment')[0];
+      document.location.href = argument;
+    }
   }
 </script>

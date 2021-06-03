@@ -18,8 +18,17 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 
 
     <div class="page-header">
-      <h1>Titre</h1>
+      <h1>Holliiwood</h1>
     </div>
 
-    <p class="lead">Contenu </p>
+    <p class="lead">Bienvenue sur Holliiwood<?php if($_SESSION["connecte"]){echo ", " . $_SESSION["pseudo"];}?></p>
 
+    <p>Toutes les fonctionnalités dont tu as besoin se situent dans la barre de navigation en haut de la page</p>
+    <p>Ici, tous les films et toutes les séries sont répertoriés. Tu peux indiquer si tu as visionné un d'entre eux.</p>
+    <p>Tu peux aussi créer ta propre watchlist, ainsi que ta liste de films et séries favoris.</p></br>
+
+    <p>Si tu as bien aimé un film ou une série, tu lui attribuer une note (de 0 à 5 étoiles), ou lui donner un avis global.</p>
+    <p>Tu peux aussi indiquer un moment qui apparaitra sur la timeline en bas des informations, et ainsi permettre aux autres utilisateurs de donner leurs avis dessus.</p>
+    <br>
+
+    <p class="lead"></p>
