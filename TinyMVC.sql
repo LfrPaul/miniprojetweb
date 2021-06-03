@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 31 mai 2021 à 18:48
+-- Généré le : jeu. 03 juin 2021 à 12:27
 -- Version du serveur :  5.7.31
 -- Version de PHP : 7.3.21
 
@@ -55,8 +55,7 @@ INSERT INTO `avisglobal` (`id`, `id_film`, `id_user`, `avis`, `type_media`) VALU
 (13, 1668, 1, 'J\'ai bien aimé', 'tv'),
 (14, 1668, 1, 'J\'ai bien aimé', 'tv'),
 (15, 632357, 1, 'edfrgthyujk', 'movie'),
-(16, 24428, 1, 'J\'aime bien ', 'movie'),
-(17, 299534, 6, 'test', 'movie');
+(16, 24428, 1, 'J\'aime bien ', 'movie');
 
 -- --------------------------------------------------------
 
@@ -73,7 +72,16 @@ CREATE TABLE IF NOT EXISTS `avismoment` (
   PRIMARY KEY (`id_avis`,`id_moment`),
   KEY `id_moment` (`id_moment`),
   KEY `id_user` (`id_user`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `avismoment`
+--
+
+INSERT INTO `avismoment` (`id_avis`, `id_moment`, `id_user`, `avis`) VALUES
+(1, 3, 1, 'Stylé la scène'),
+(2, 3, 1, 'test'),
+(3, 1, 1, 'J\'ai adoré la bataille');
 
 -- --------------------------------------------------------
 
@@ -99,10 +107,11 @@ INSERT INTO `favoris` (`id_user`, `id_film`, `type_media`) VALUES
 (6, 299534, 'movie'),
 (1, 283995, 'movie'),
 (1, 1668, 'tv'),
-(1, 635302, 'movie'),
+(1, 135397, 'movie'),
 (1, 65930, 'tv'),
 (1, 2316, 'tv'),
-(1, 118340, 'movie');
+(1, 118340, 'movie'),
+(1, 635302, 'movie');
 
 -- --------------------------------------------------------
 
@@ -127,12 +136,21 @@ CREATE TABLE IF NOT EXISTS `image` (
 DROP TABLE IF EXISTS `moments`;
 CREATE TABLE IF NOT EXISTS `moments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type_media` varchar(11) NOT NULL,
   `id_film` int(11) NOT NULL,
   `offset` int(11) DEFAULT NULL COMMENT 'Timecode en minutes',
   `label` varchar(255) DEFAULT NULL,
   `resume` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`,`id_film`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `moments`
+--
+
+INSERT INTO `moments` (`id`, `type_media`, `id_film`, `offset`, `label`, `resume`) VALUES
+(1, 'movie', 299534, 134, 'Bataille', 'Bataille finale trop bien'),
+(3, 'movie', 299534, 20, 'Début du film', 'Scène du début dans la qg');
 
 -- --------------------------------------------------------
 
@@ -162,7 +180,11 @@ INSERT INTO `notes` (`id_film`, `id_user`, `note`, `type_media`) VALUES
 (2004, 1, 4, 'tv'),
 (1668, 1, 4, 'tv'),
 (632357, 1, 1, 'movie'),
-(299534, 6, 5, 'movie');
+(299534, 6, 5, 'movie'),
+(2996, 1, 3, 'tv'),
+(24428, 1, 5, 'movie'),
+(635302, 1, 4, 'movie'),
+(299536, 1, 4, 'movie');
 
 -- --------------------------------------------------------
 
@@ -177,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `motdepasse` varchar(255) DEFAULT NULL,
   `private` int(11) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `users`
@@ -188,7 +210,9 @@ INSERT INTO `users` (`id`, `pseudo`, `motdepasse`, `private`) VALUES
 (3, 'Test', 'motdepasse', 1),
 (4, 'QuelquunDautre', 'mdp', 1),
 (5, 'Utilisateur', 'mdp', 1),
-(6, 'Thomas', 'fdsfsdf', 1);
+(6, 'Thomas', 'fdsfsdf', 1),
+(7, 'FHDSFSDUI', 'motdepasse', 1),
+(8, 'Test', 'fdsfdsfds', 1);
 
 -- --------------------------------------------------------
 
@@ -211,19 +235,18 @@ CREATE TABLE IF NOT EXISTS `visionne` (
 INSERT INTO `visionne` (`id_user`, `id_film`, `type_media`) VALUES
 (1, 2004, 'tv'),
 (1, 135397, 'movie'),
-(1, 118340, 'movie'),
+(1, 299536, 'movie'),
 (1, 1668, 'tv'),
 (1, 283995, 'movie'),
 (1, 299534, 'movie'),
 (1, 85937, 'tv'),
 (1, 65930, 'tv'),
-(1, 60625, 'tv'),
-(1, 2316, 'tv'),
 (1, 24428, 'movie'),
-(1, 635302, 'movie'),
-(1, 632357, 'movie'),
+(1, 2316, 'tv'),
+(1, 118340, 'movie'),
 (6, 440249, 'movie'),
-(6, 299534, 'movie');
+(6, 299534, 'movie'),
+(1, 635302, 'movie');
 
 -- --------------------------------------------------------
 
@@ -238,6 +261,13 @@ CREATE TABLE IF NOT EXISTS `watchlist` (
   `type_media` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id_user`,`id_film`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `watchlist`
+--
+
+INSERT INTO `watchlist` (`id_user`, `id_film`, `type_media`) VALUES
+(1, 497698, 'movie');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
